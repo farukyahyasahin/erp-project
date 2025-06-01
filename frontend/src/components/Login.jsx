@@ -10,9 +10,6 @@ const Login = ({ onLogin, switchToSignup }) => {
     e.preventDefault();
 
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) return alert(error.message);
-
-    alert('Giriş başarılı ✅');
     if (data.session) onLogin(data.session.user);
   };
 

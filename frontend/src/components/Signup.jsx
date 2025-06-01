@@ -19,19 +19,20 @@ const Signup = ({ onSignup, switchToLogin }) => {
             }
         });
 
-        if (error) return alert(error.message);
-        alert('Kayıt başarılı ✅');
 
         if (data.user) {
-            await supabase.from('users').insert([{
-                id: data.user.id,
-                email: email,
-                full_name: fullName,
-                role: role
-            }]);
+  const role = email === 'admin@example.com' ? 'admin' : 'user';
 
-            onSignup(data.user);
-        }
+  await supabase.from('users').insert([{
+    id: data.user.id,
+    email: email,
+    full_name: fullName,
+    role: role
+  }]);
+
+  onSignup(data.user);
+}
+
     };
 
     return (

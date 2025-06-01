@@ -1,0 +1,14 @@
+table {
+  margin-top: 20px;
+  border: 1px solid #ccc;
+}
+
+table th, table td {
+  padding: 8px;
+  text-align: left;
+}
+
+table input {
+  width: 100%;
+  padding: 4px;
+}

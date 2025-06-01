@@ -23,11 +23,9 @@ const ProductForm = ({ onAdded }) => {
                 price: parseFloat(form.price),
                 stock: parseInt(form.stock),
             });
-            alert('Ürün Eklendi');
             setForm({ name: '', description: '', price: '', stock: '' });
             onAdded?.();
         } catch (err) {
-            alert('Ekleme Başarısız');
         }
     };
 
