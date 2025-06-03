@@ -4,6 +4,7 @@ import ProductList from './ProductList';
 import ProductForm from './ProductForm';
 import CustomerList from './CustomerList';
 import CompanyInfo from './CompanyInfo';
+import OrderManagement from './OrderManagement';
 
 const AdminPanel = ({ onLogout }) => {
   const [currentView, setCurrentView] = useState(() => {
@@ -22,7 +23,6 @@ const AdminPanel = ({ onLogout }) => {
     return () => clearInterval(interval);
   }, []);
 
-  // 🌟 Her view değiştiğinde localStorage'a kaydet
   useEffect(() => {
     localStorage.setItem('adminView', currentView);
   }, [currentView]);
@@ -30,7 +30,7 @@ const AdminPanel = ({ onLogout }) => {
   const renderView = () => {
     switch (currentView) {
       case 'siparisler':
-        return <div>Siparişler</div>;
+        return <OrderManagement />;
       case 'stok':
         return <ProductList />;
       case 'urun':
@@ -38,7 +38,7 @@ const AdminPanel = ({ onLogout }) => {
       case 'firma':
         return <CompanyInfo />;
       case 'musteriler':
-        return <CustomerList/>;
+        return <CustomerList />;
       default:
         return <div>Panel</div>;
     }
