@@ -43,8 +43,8 @@ Bu proje, bir ERP sisteminin temel işlevlerini içeren tam yığın (full-stack
 
 ### 1. Backend Kurulumu
 cd backend
-npm install
-npm start
+npm install 
+node index.js
 
 ### 2. Frontend Kurulumu
 cd frontend
