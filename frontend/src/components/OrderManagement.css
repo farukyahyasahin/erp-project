@@ -56,3 +56,113 @@
 .order-management button:hover {
   opacity: 0.85;
 }
+ 
+.pagination-controls {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-controls button {
+  padding: 6px 10px;
+  margin: 0 4px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background-color: #f0f0f0;
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.order-management table button {
+  padding: 4px 8px;
+  font-size: 13px;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.order-management ul {
+  list-style: disc;
+  padding-left: 16px;
+}
+
+.product-cell {
+  position: relative;
+}
+
+.product-preview {
+  font-weight: bold;
+  color: #555;
+}
+
+.product-list {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 10;
+  width: max-content;
+  min-width: 200px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.product-cell:hover .product-list {
+  display: block;
+}
+
+/* Ürün hücresi hover ile açılır */
+.product-cell {
+  position: relative;
+}
+
+.product-preview {
+  font-weight: bold;
+  color: #555;
+}
+
+/* Hover olduğunda gösterilecek kutu */
+.product-list {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 10px;
+  z-index: 100;
+  max-height: 200px;       /* Çok ürün varsa taşmasın */
+  overflow-y: auto;        /* Kaydırma çubuğu göster */
+  width: max-content;
+  min-width: 200px;
+}
+
+/* Hover ile kutuyu göster */
+.product-cell:hover .product-list {
+  display: block;
+}
+
+/* Mobilde taşmayı engellemek istersen */
+@media (max-width: 768px) {
+  .product-list {
+    position: static;
+    max-height: none;
+    box-shadow: none;
+    border: none;
+  }
+}

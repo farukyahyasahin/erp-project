@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
+import './CompanyInfo.css';
 
 const CompanyInfo = () => {
   const [company, setCompany] = useState(null);
@@ -42,7 +43,7 @@ const CompanyInfo = () => {
   if (!company) return <p>Yükleniyor...</p>;
 
   return (
-    <div>
+    <div className='company-info'>
       <h2>Firma Bilgileri</h2>
       {isEditing ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px' }}>

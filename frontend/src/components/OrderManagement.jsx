@@ -5,6 +5,8 @@ import './OrderManagement.css';
 const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -54,60 +56,95 @@ const OrderManagement = () => {
 
   if (loading) return <p>Yükleniyor...</p>;
 
+  // 🔢 Sayfalama hesaplamaları
+  const indexOfLastOrder = currentPage * itemsPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - itemsPerPage;
+  const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
+  const totalPages = Math.ceil(orders.length / itemsPerPage);
+
   return (
     <div className="order-management">
       <h2>Siparişler</h2>
       {orders.length === 0 ? (
         <p>Henüz sipariş yok.</p>
       ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Müşteri</th>
-              <th>Ürünler</th>
-              <th>Toplam</th>
-              <th>Tarih</th>
-              <th>Durum</th>
-              <th>İşlem</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map(order => (
-              <tr key={order.id}>
-                <td>
-                  {order.users?.full_name} <br />
-                  <small>{order.users?.email}</small>
-                </td>
-                <td>
-                  <ul>
-                    {order.order_items.map((item, i) => (
-                      <li key={i}>
-                        {item.products?.name} × {item.quantity}
-                      </li>
-                    ))}
-                  </ul>
-                </td>
-                <td>{order.total} ₺</td>
-                <td>{new Date(order.created_at).toLocaleString('tr-TR')}</td>
-                <td>{order.status || 'beklemede'}</td>
-                <td>
-                  {order.status === 'approved' || order.status === 'rejected' ? (
-                    '-'
-                  ) : (
-                    <>
-                      <button onClick={() => handleAction(order.id, 'approve')}>
-                        Onayla
-                      </button>
-                      <button onClick={() => handleAction(order.id, 'reject')}>
-                        Reddet
-                      </button>
-                    </>
-                  )}
-                </td>
+        <>
+          <table>
+            <thead>
+              <tr>
+                <th>Müşteri</th>
+                <th>Ürünler</th>
+                <th>Toplam</th>
+                <th>Tarih</th>
+                <th>Durum</th>
+                <th>İşlem</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {currentOrders.map(order => (
+                <tr key={order.id}>
+                  <td>
+                    {order.users?.full_name} <br />
+                    <small>{order.users?.email}</small>
+                  </td>
+                  <td className="product-cell">
+                    <div className="product-preview">
+                      {order.order_items.length} ürün
+                    </div>
+                    <ul className="product-list">
+                      {order.order_items.map((item, i) => (
+                        <li key={i}>
+                          {item.products?.name} × {item.quantity}
+                        </li>
+                      ))}
+                    </ul>
+                  </td>
+
+
+
+                  <td>{order.total} ₺</td>
+                  <td>{new Date(order.created_at).toLocaleString('tr-TR')}</td>
+                  <td>{order.status || 'beklemede'}</td>
+                  <td>
+                    {order.status === 'approved' || order.status === 'rejected' ? (
+                      '-'
+                    ) : (
+                      <>
+                        <button onClick={() => handleAction(order.id, 'approve')}>
+                          Onayla
+                        </button>
+                        <button onClick={() => handleAction(order.id, 'reject')}>
+                          Reddet
+                        </button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Sayfa kontrol butonları */}
+          <div className="pagination-controls">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              Önceki
+            </button>
+
+            <span style={{ margin: '0 10px' }}>
+              Sayfa {currentPage} / {totalPages}
+            </span>
+
+            <button
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+            >
+              Sonraki
+            </button>
+          </div>
+        </>
       )}
     </div>
   );

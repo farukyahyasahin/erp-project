@@ -1,14 +1,87 @@
-table {
-  margin-top: 20px;
-  border: 1px solid #ccc;
+/* Filtre / arama alanı */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-table th, table td {
-  padding: 8px;
+.filter-bar input {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 140px;
+  box-sizing: border-box;
+}
+
+/* Tablo */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  background-color: #fff;
+}
+
+table th,
+table td {
+  padding: 10px 12px;
   text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+table th {
+  background-color: #f5f5f5;
+  cursor: pointer;
+  user-select: none;
+}
+
+table tr:hover {
+  background-color: #f9f9f9;
 }
 
 table input {
   width: 100%;
-  padding: 4px;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Butonlar */
+button {
+  padding: 6px 12px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 4px;
+  background-color: #3498db;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Kaydet ve İptal butonları için farklı renkler */
+button.save-btn {
+  background-color: #27ae60;
+}
+
+button.save-btn:hover {
+  background-color: #219150;
+}
+
+button.cancel-btn {
+  background-color: #e74c3c;
+}
+
+button.cancel-btn:hover {
+  background-color: #c0392b;
 }
