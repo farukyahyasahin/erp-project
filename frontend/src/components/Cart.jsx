@@ -1,5 +1,6 @@
 import React from 'react';
 import { supabase } from '../supabaseClient';
+import './Cart.css';
 
 const Cart = ({ cartItems, setCartItems, userId }) => {
   const handleRemove = (productId) => {
@@ -7,10 +8,11 @@ const Cart = ({ cartItems, setCartItems, userId }) => {
   };
 
   const getTotal = () => {
-    return cartItems.reduce(
+    const total = cartItems.reduce(
       (sum, item) => sum + item.product.price * item.quantity,
       0
     );
+    return total.toFixed(2); // Kesirli basamak sorunu çözülür
   };
 
   const handleOrder = async () => {
@@ -27,7 +29,7 @@ const Cart = ({ cartItems, setCartItems, userId }) => {
 
     const { error } = await supabase
       .from('orders')
-      .insert([{ user_id: userId, total: getTotal() }])
+      .insert([{ user_id: userId, total: parseFloat(getTotal()) }])
       .select('id')
       .single();
 
@@ -65,13 +67,13 @@ const Cart = ({ cartItems, setCartItems, userId }) => {
           <ul>
             {cartItems.map(({ product, quantity }) => (
               <li key={product.id}>
-                {product.name} x {quantity} – {product.price * quantity} TL
+                <span>{product.name} x {quantity} – {(product.price * quantity).toFixed(2)} TL</span>
                 <button onClick={() => handleRemove(product.id)}>Sil</button>
               </li>
             ))}
           </ul>
           <p><strong>Toplam:</strong> {getTotal()} TL</p>
-          <button onClick={handleOrder}>Siparişi Ver</button>
+          <button className="order-button" onClick={handleOrder}>Siparişi Ver</button>
         </>
       )}
     </div>
