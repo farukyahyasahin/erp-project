@@ -102,18 +102,19 @@ const OrderManagement = () => {
 
 
 
+
                   <td>{order.total} ₺</td>
                   <td>{new Date(order.created_at).toLocaleString('tr-TR')}</td>
                   <td>{order.status || 'beklemede'}</td>
                   <td>
-                    {order.status === 'approved' || order.status === 'rejected' ? (
+                    {order.status === 'onaylandı' || order.status === 'reddedildi' ? (
                       '-'
                     ) : (
                       <>
-                        <button onClick={() => handleAction(order.id, 'approve')}>
+                        <button onClick={() => handleAction(order.id, 'onay')}>
                           Onayla
                         </button>
-                        <button onClick={() => handleAction(order.id, 'reject')}>
+                        <button onClick={() => handleAction(order.id, 'red')}>
                           Reddet
                         </button>
                       </>

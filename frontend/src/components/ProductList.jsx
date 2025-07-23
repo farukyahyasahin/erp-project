@@ -49,7 +49,14 @@ const ProductList = () => {
         stock: parseInt(form.stock)
       })
       .eq('id', editingId);
+      
+      if(error) {
+        console.error(error.message);
+        alert('Üürn güncellenirken sorun oluştu!');
+        return;
+      }
 
+    alert('Ürün başarıyla güncellendi');
     setEditingId(null);
     setForm({});
     fetchProducts();

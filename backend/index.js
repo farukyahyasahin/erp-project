@@ -107,7 +107,7 @@ app.get('/api/orders', async (req, res) => {
   res.json(data);
 });
 
-app.patch('/api/orders/:id/approve', async (req, res) => {
+app.patch('/api/orders/:id/onay', async (req, res) => {
   const orderId = req.params.id;
 
   // Sipariş ürünlerini al
@@ -129,7 +129,7 @@ app.patch('/api/orders/:id/approve', async (req, res) => {
   // Siparişi onayla
   const { error: updateError } = await supabase
     .from('orders')
-    .update({ status: 'approved' })
+    .update({ status: 'onaylandı' })
     .eq('id', orderId);
 
   if (updateError) return res.status(500).json({ error: updateError.message });
@@ -137,10 +137,10 @@ app.patch('/api/orders/:id/approve', async (req, res) => {
   res.json({ message: 'Sipariş onaylandı ve stok düşürüldü.' });
 });
 
-app.patch('/api/orders/:id/reject', async (req, res) => {
+app.patch('/api/orders/:id/red', async (req, res) => {
   const { error } = await supabase
     .from('orders')
-    .update({ status: 'rejected' })
+    .update({ status: 'reddedildi' })
     .eq('id', req.params.id);
 
   if (error) return res.status(500).json({ error: error.message });
