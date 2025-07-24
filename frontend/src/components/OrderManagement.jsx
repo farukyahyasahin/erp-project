@@ -6,7 +6,7 @@ const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -56,7 +56,6 @@ const OrderManagement = () => {
 
   if (loading) return <p>Yükleniyor...</p>;
 
-  // 🔢 Sayfalama hesaplamaları
   const indexOfLastOrder = currentPage * itemsPerPage;
   const indexOfFirstOrder = indexOfLastOrder - itemsPerPage;
   const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
@@ -125,9 +124,25 @@ const OrderManagement = () => {
             </tbody>
           </table>
 
+          <div>
+            <label>Sayfa başına kayıt: </label>
+            <input type="number" 
+            min={1}
+            value={itemsPerPage}
+            onChange={(e) => {
+              const value = Number(e.target.value);
+              if(value => 1) {
+                setItemsPerPage(value);
+                setCurrentPage(1);
+              }
+            }}
+            style={{width: '60px', padding: '4px', marginLeft: '6px'}}
+            />
+          </div>
+
           {/* Sayfa kontrol butonları */}
           <div className="pagination-controls">
-            <button
+            <button 
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
             >

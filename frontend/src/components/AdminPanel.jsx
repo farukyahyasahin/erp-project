@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './AdminPanel.css';
 import ProductList from './ProductList';
-import ProductForm from './ProductForm';
 import CustomerList from './CustomerList';
 import CompanyInfo from './CompanyInfo';
 import OrderManagement from './OrderManagement';
+import StockManagement from './StockManagement';
 
 const AdminPanel = ({ onLogout }) => {
   const [currentView, setCurrentView] = useState(() => {
@@ -34,7 +34,7 @@ const AdminPanel = ({ onLogout }) => {
       case 'stok':
         return <ProductList />;
       case 'urun':
-        return <ProductForm />;
+        return <StockManagement />;
       case 'firma':
         return <CompanyInfo />;
       case 'musteriler':

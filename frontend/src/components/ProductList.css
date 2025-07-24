@@ -85,3 +85,39 @@ button.cancel-btn {
 button.cancel-btn:hover {
   background-color: #c0392b;
 }
+
+.pagination-controls {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-controls button {
+  padding: 6px 10px;
+  margin: 0 4px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background-color: #f0f0f0;
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+.pagination-controls button:first-of-type {
+  background-color: #28a745;
+  color: white;
+}
+
+.pagination-controls button:last-of-type {
+  background-color: #dc3545;
+  color: white;
+}

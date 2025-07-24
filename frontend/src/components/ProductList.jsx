@@ -10,6 +10,8 @@ const ProductList = () => {
   const [filters, setFilters] = useState({ minPrice: '', maxPrice: '', minStock: '', maxStock: '' });
   const [sortBy, setSortBy] = useState(null);
   const [sortAsc, setSortAsc] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   const fetchProducts = async () => {
     const { data, error } = await supabase
@@ -49,12 +51,12 @@ const ProductList = () => {
         stock: parseInt(form.stock)
       })
       .eq('id', editingId);
-      
-      if(error) {
-        console.error(error.message);
-        alert('Üürn güncellenirken sorun oluştu!');
-        return;
-      }
+
+    if (error) {
+      console.error(error.message);
+      alert('Üürn güncellenirken sorun oluştu!');
+      return;
+    }
 
     alert('Ürün başarıyla güncellendi');
     setEditingId(null);
@@ -88,6 +90,10 @@ const ProductList = () => {
       return 0;
     })
 
+  const indexOfLastProduct = currentPage * itemsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   return (
     <div>
@@ -141,7 +147,7 @@ const ProductList = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredProducts.map((p) => (
+          {currentProducts.map((p) => (
             <tr key={p.id} style={{ borderBottom: '1px solid #ddd' }}>
               {editingId === p.id ? (
                 <>
@@ -150,8 +156,8 @@ const ProductList = () => {
                   <td><input name="price" value={form.price} onChange={handleChange} /></td>
                   <td><input name="stock" value={form.stock} onChange={handleChange} /></td>
                   <td>
-                    <button onClick={handleUpdate} className="save-btn" style={{color: 'white'}}>Kaydet</button>
-                    <button onClick={handleCancel} className="cancel-btn" style={{color: 'white'}}>İptal</button>
+                    <button onClick={handleUpdate} className="save-btn" style={{ color: 'white' }}>Kaydet</button>
+                    <button onClick={handleCancel} className="cancel-btn" style={{ color: 'white' }}>İptal</button>
                   </td>
                 </>
               ) : (
@@ -161,7 +167,7 @@ const ProductList = () => {
                   <td>{p.price} ₺</td>
                   <td>{p.stock}</td>
                   <td>
-                    <button onClick={() => handleEdit(p)} style={{color: 'white'}}>Düzenle</button>
+                    <button onClick={() => handleEdit(p)} style={{ color: 'white' }}>Düzenle</button>
                   </td>
                 </>
               )}
@@ -169,6 +175,43 @@ const ProductList = () => {
           ))}
         </tbody>
       </table>
+      <div>
+            <label>Sayfa başına kayıt: </label>
+            <input type="number" 
+            min={1}
+            value={itemsPerPage}
+            onChange={(e) => {
+              const value = Number(e.target.value);
+              if(value => 1) {
+                setItemsPerPage(value);
+                setCurrentPage(1);
+              }
+            }}
+            style={{width: '60px', padding: '4px', marginLeft: '6px'}}
+            />
+          </div>
+
+          {/* Sayfa kontrol butonları */}
+          <div className="pagination-controls">
+            <button 
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              Önceki
+            </button>
+
+            <span style={{ margin: '0 10px' }}>
+              Sayfa {currentPage} / {totalPages}
+            </span>
+
+            <button
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+            >
+              Sonraki
+            </button>
+          </div>
+
     </div>
   );
 };
