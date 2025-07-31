@@ -1,26 +1,53 @@
-import React, { useEffect, useState } from 'react'
-import { supabase } from '../supabaseClient'
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../supabaseClient';
 
 const CustomerList = () => {
   const [customers, setCustomers] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
   useEffect(() => {
-    const fetchCustomers = async () => {
-      const { data, error } = await supabase
+    const fetchData = async () => {
+      // 1. Kullanıcıları getir
+      const { data: users, error: userError } = await supabase
         .from('users')
         .select('id, full_name, email')
         .eq('role', 'user')
         .order('full_name', { ascending: true });
 
-      if (error) {
-        console.error('Müşteri Çekme Hatası:', error.message);
+      if (userError) {
+        console.error('Müşteri Çekme Hatası:', userError.message);
         return;
       }
-      setCustomers(data);
+
+      // 2. Onaylanmış siparişleri getir
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .select('user_id, total')
+        .eq('status', 'onaylandı');
+
+      if (orderError) {
+        console.error('Sipariş Çekme Hatası:', orderError.message);
+        return;
+      }
+
+      // 3. Her kullanıcıya göre toplam harcama hesapla
+      const harcamalar = {};
+      orderData.forEach(o => {
+        harcamalar[o.user_id] = (harcamalar[o.user_id] || 0) + o.total;
+      });
+
+      // 4. Kullanıcı verisini toplam harcama ile birleştir
+      const enrichedUsers = users.map(u => ({
+        ...u,
+        toplam: harcamalar[u.id] || 0
+      }));
+
+      setCustomers(enrichedUsers);
     };
-    fetchCustomers();
+
+    fetchData();
   }, []);
 
   const indexOfLastCustomer = currentPage * itemsPerPage;
@@ -40,6 +67,7 @@ const CustomerList = () => {
               <th style={{ borderBottom: '1px solid #ccc', padding: '8px' }}>Ad Soyad</th>
               <th style={{ borderBottom: '1px solid #ccc', padding: '8px' }}>E-posta</th>
               <th style={{ borderBottom: '1px solid #ccc', padding: '8px' }}>Kullanıcı ID</th>
+              <th style={{ borderBottom: '1px solid #ccc', padding: '8px' }}>Toplam Harcama</th>
             </tr>
           </thead>
           <tbody>
@@ -48,19 +76,22 @@ const CustomerList = () => {
                 <td style={{ padding: '8px' }}>{c.full_name}</td>
                 <td style={{ padding: '8px' }}>{c.email}</td>
                 <td style={{ padding: '8px' }}>{c.id}</td>
+                <td style={{ padding: '8px' }}>{c.toplam.toFixed(2)} ₺</td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
+
       <div>
         <label>Sayfa başına kayıt: </label>
-        <input type="number"
+        <input
+          type="number"
           min={1}
           value={itemsPerPage}
           onChange={(e) => {
             const value = Number(e.target.value);
-            if (value => 1) {
+            if (value >= 1) {
               setItemsPerPage(value);
               setCurrentPage(1);
             }
@@ -69,7 +100,6 @@ const CustomerList = () => {
         />
       </div>
 
-      {/* Sayfa kontrol butonları */}
       <div className="pagination-controls">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
